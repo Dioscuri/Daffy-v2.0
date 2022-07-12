@@ -25,10 +25,10 @@ const main = async () =>{
     })
 
     //FETCHING DATA FROM GOOGLE SHEET
-    const allServantProfiles = await functions.fetchSheetData(process.env.GOOGLE_KEY, process.env.CATACLYSM_SHEET, 'Servants!A3:N')
-    const allMasterProfiles = await functions.fetchSheetData(process.env.GOOGLE_KEY, process.env.CATACLYSM_SHEET, 'Masters!A3:P')
-    const allNPC = await functions.fetchSheetData(process.env.GOOGLE_KEY, process.env.CATACLYSM_SHEET, 'NPCs!A3:O')
-    const allPlayers = await functions.fetchSheetData(process.env.GOOGLE_KEY, process.env.CATACLYSM_SHEET, 'Players!A3:E')
+    const allServantProfiles = await functions.fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Servants!A3:N')
+    const allMasterProfiles = await functions.fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Masters!A3:P')
+    const allNPC = await functions.fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'NPCs!A3:O')
+    const allPlayers = await functions.fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Players!A3:E')
 
     //CONTAINERS FOR CHARACTERS AND PLAYERS
     let servantMap = new Map()
