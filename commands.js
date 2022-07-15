@@ -182,12 +182,10 @@ const help = (receivedMessage, arguments) => {
 
             {name: '**\nValid Commands for Masters:**',
                 value: arguments.masterList.join(", "),
-                //'iza, izarie, taipo, wilbur, emeria, westenra, west, finis, katya, grim, grimaud, egnilda, egni, calix, ava, daffy, daffodil, mei, dennis, siunaus, siu, penelope, pen, charmion, charm \n',
                 inline: true,},
 
             {name: '**\nValid Command for Servants:**',
                 value: arguments.servantList.join(", "),
-                //'saber, archer, lancer, rider, caster, berserker, zerker, assassin, foreigner, ruler, johannes, john, yohannan, alterego, ae, lbsaber, lblancer, lbarcher, lbrider, lbcaster, lbassassin, lbass, lbberserker, lbzerker, lbzerk, avenger \n',
                 inline: true,},
 
             {name: '\u200b',
@@ -204,7 +202,6 @@ const help = (receivedMessage, arguments) => {
 
             {name: '**\nGeneral Commands: \n**',
                 value: arguments.commandList.join(", "),
-                //'owo, culture, sparkle, height, age, weight, timezones',
                 inline: true,},]
     }
 
@@ -274,7 +271,6 @@ const weight = (receivedMessage, weightList) => {
         color: 0x0099ff,
         title : `Characters' Weight List`,
         description: printList.join(""),
-        //'0.0 kg **Gabriel** \n 0.0 kg **Uriel** \n 0.0 kg **Raphael** \n 0.0 kg **Michael** \n 0.1 kg **Penelope** \n 32 kg **Daffodil** \n 42 kg **Siunaus** \n 45 kg **Sabine** \n 45 kg **Charmion** \n 46 kg **Li-Mei** \n 48 kg **Ava** \n 50 kg **Grimaud** \n 50 kg **Emeria** \n 52 kg **Westenra** \n 54 kg **Ruler** \n 57 kg **Katya** \n 59 kg **Egnilda** \n 60 kg **Taipo** \n 60 kg **LB Archer** \n 63 kg **Calix** \n 63 kg **Dennis** \n 65 kg **LB Lancer** \n 65 kg **Archer** \n 66 kg **Izarie** \n 66 kg **Alter Ego**  \n 71 kg **Saber** \n 73 kg **LB Saber** \n 74 kg **Wilbur** \n 74 kg **Caster** \n 76 kg **Lancer** \n 77 kg **LB Assassin** \n 78 kg **LB Zerker** \n 80 kg **Rider** \n 82 kg **Finis** \n 82 kg **Assassin**  \n 108 kg **Berserker** \n \n ??? **Foreigner**',
     }
 
     receivedMessage.channel.send({embeds:[weightEmbed]})
@@ -333,7 +329,6 @@ const timezones = (receivedMessage, playerList) => {
         color: 3066993 ,
         title : 'Timezones',
         description: printList.join(""),
-        //'GMT - 8  **Angie** \n GMT - 8  **Cheese** \n GMT - 8  **DasDokter** \n GMT - 8  **Lib** \n GMT - 8  **Venacyr** \n GMT - 8  **Yurae** \n \n GMT - 5  **Grizzly** \n  GMT - 5  **Rhye** \n GMT - 5  **Roach** \n  GMT - 5  **Silver** \n GMT - 5  **U.N. Owen** \n \n \n GMT + 0  **GreyWulfos** \n \n GMT + 1  **CT** \n GMT + 1  **Lupus** \n \n GMt + 7 **Termy** \n \n GMT + 8 **Shogun** \n GMT + 8 **Heliseus** \n \n GMT + 10  **Lempika** \n \n GMT + 11  **Akky** \n',
     }
 
     receivedMessage.channel.send({embeds:[helpembed]})
