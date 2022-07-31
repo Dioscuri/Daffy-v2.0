@@ -39,12 +39,6 @@ const main = async () =>{
     const allMasterNames = []
     const allNPCs = []
 
-    const allHeights = []
-    const allWeights = []
-    const allAges = []
-
-    const allPlayersList = []
-
     const allCommands = Object.keys(validCommands)
 
     //PARSING RETRIEVED DATA
@@ -72,20 +66,6 @@ const main = async () =>{
             attribute: servant[12]? servant[12] : '???',
             image: servant[13] ? new URL(servant[13]) : null,
         })
-
-        allHeights.push(
-            {
-                name: servant[0],
-                height: parseFloat(servant[10]) ? parseFloat(servant[10]) : 'N/A'
-            }
-        )
-
-        allWeights.push(
-            {
-                name: servant[0],
-                weight: parseFloat(servant[11]) ? parseFloat(servant[11]) : 'N/A'
-            }
-        )
     })
 
     allMasterProfiles.forEach(master => {
@@ -116,28 +96,6 @@ const main = async () =>{
         })
 
         allMasterNames.push(master[0].toLowerCase())
-
-        allHeights.push(
-            {
-                name: master[0],
-                height: parseFloat(master[12]) ? parseFloat(master[12]) : '???',
-            }
-        )
-
-        allWeights.push(
-            {
-                name: master[0],
-                weight: parseFloat(master[13]) ? parseFloat(master[13]) : '???',
-            }
-        )
-
-        allAges.push(
-            {
-                name: master[0],
-                age: parseInt(master[14]) ? parseInt(master[14]) :'???',
-            }
-        )
-
     })
 
     allNPC.forEach(npc => {
@@ -166,28 +124,6 @@ const main = async () =>{
             age: npc[13]? npc[13] : '???',
             image: npc[14] ?  new URL(npc[14]) : null,
         })
-
-        allHeights.push(
-            {
-                name: npc[0],
-                height: parseFloat(npc[11]) ? parseFloat(npc[11]) : '???'
-            }
-        )
-
-        allWeights.push(
-            {
-                name: npc[0],
-                weight: parseFloat(npc[12]) ? parseFloat(npc[12]) : '???'
-            }
-        )
-
-        allAges.push(
-            {
-                name: npc[0],
-                age: parseInt(npc[13]) ? parseInt(npc[13]) : '???'
-            }
-        )
-
     })
 
     allPlayers.forEach(player => {
@@ -226,17 +162,17 @@ const main = async () =>{
             }
 
             else if (primaryCommand == 'height'){
-                validCommands['height'](receivedMessage, allHeights)
+                validCommands['height'](receivedMessage)
             }
             else if (primaryCommand == 'weight'){
-                validCommands['weight'](receivedMessage, allWeights)
+                validCommands['weight'](receivedMessage)
             }
             else if (primaryCommand == 'age'){
-                validCommands['age'](receivedMessage, allAges)
+                validCommands['age'](receivedMessage)
             }
 
             else if (primaryCommand == 'timezones'){
-                validCommands['timezones'](receivedMessage, allPlayersList)
+                validCommands['timezones'](receivedMessage)
             }
 
             //These are the rolls
