@@ -83,6 +83,6 @@ require("discord.js");
 
 
  module.exports = {
-    profile: function(receivedMessage,arguments){return profile(receivedMessage,arguments)},
-    fetchSheetData: function(auth, sheetID, seekRange) {return fetchSheetData(auth, sheetID, seekRange)},
+    profile: (receivedMessage,arguments) => profile(receivedMessage,arguments),
+    fetchSheetData: (auth, sheetID, seekRange) => fetchSheetData(auth, sheetID, seekRange),
  };
