@@ -1,12 +1,10 @@
 const { fetchSheetData } = require('./functions')
 
-
 // Functions for fetching data from Google Sheets
-const fetchServantData = () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Servants!A3:N')
-const fetchMasterData = () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Masters!A3:P')
-const fetchNpcData = () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'NPCs!A3:O')
-const fetchPlayerData = () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Players!A3:E')
-
+const fetchServantData = async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Servants!A3:N')
+const fetchMasterData = async ()  => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Masters!A3:P')
+const fetchNpcData = async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'NPCs!A3:O')
+const fetchPlayerData = async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Players!A3:E')
 
 // Helper functions for constructing objects representing sheet data.
 // Note: all objects possess a 'name' property. In case we want to add more categories, 
@@ -89,12 +87,18 @@ const constructPlayerProfile = (player) => {
 }
 
 // Function for turning a 2d array of data into a map of objects using objFunc.
-const generateMap = (objFunc, data) => new Map(data.map(
-  (index) => {
-    const obj = objFunc(index)
-    return [obj['name'], obj]
-  }
-))
+const generateMap = async (objFunc, data) => {
+  const database_data = await data  
+  let generatedMap = new Map(  
+    database_data.map(
+    (index) => {
+      const obj = objFunc(index)
+      return([obj['name'].toLowerCase(), obj])
+  }))
+
+  return generatedMap
+
+}
 
 module.exports = {
   players: generateMap(constructPlayerProfile, fetchPlayerData()),

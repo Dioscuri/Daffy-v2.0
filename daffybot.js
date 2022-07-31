@@ -1,9 +1,22 @@
-const main = async () =>{
-    require("dotenv").config(); //to start process from .env file
-    const {Client, Intents}=require("discord.js");
-    const functions = require('./functions.js');
-    const validCommands = require('./commands.js')
+//REQUIRED
+require("dotenv").config(); //to start process from .env file
+const {Client, Intents}=require("discord.js");
+const functions = require('./functions.js');
+const validCommands = require('./commands.js')
 
+//GLOBAL VARIABLES
+AGE_LIST = []
+HEIGHT_LIST = []
+WEIGHT_LIST = []
+
+COMMANDS = Object.keys(validCommands)
+
+SERVANT_MAP = []
+MASTER_MAP = []
+NPC_MAP = []
+PLAYER_MAP = []
+
+const main = async () =>{
     const client=new Client({
         intents:[
             Intents.FLAGS.GUILDS,//adds server functionality
@@ -19,190 +32,12 @@ const main = async () =>{
         //Servers (Guilds) and Channels
         client.guilds.cache.forEach((guild) => {
             console.log(guild.name)
-        /* guild.channels.cache.forEach((channel) =>{console.log(` - ${channel.name} ${channel.type} ${channel.id}`)})*/
         } )
     
     })
 
-    //FETCHING DATA FROM GOOGLE SHEET
-    const allServantProfiles = await functions.fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Servants!A3:N')
-    const allMasterProfiles = await functions.fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Masters!A3:P')
-    const allNPC = await functions.fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'NPCs!A3:O')
-    const allPlayers = await functions.fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Players!A3:E')
-
-    //CONTAINERS FOR CHARACTERS AND PLAYERS
-    let servantMap = new Map()
-    let masterMap = new Map()
-    let npcMap = new Map()
-
-    const allServantContainers = []
-    const allMasterNames = []
-    const allNPCs = []
-
-    const allHeights = []
-    const allWeights = []
-    const allAges = []
-
-    const allPlayersList = []
-
-    const allCommands = Object.keys(validCommands)
-
-    //PARSING RETRIEVED DATA
-    allServantProfiles.forEach(servant => {
-        //Gets all Servant Containers
-        if (!servant[0] || servant[0] == ''){return}
-        allServantContainers.push(servant[0].toLowerCase())
-
-        //Set Key value Pairs according to the Servant Container
-        servantMap.set(servant[0].toLowerCase(), 
-        {
-            class_container : servant[0],
-            trueName: servant[1],
-            role: 'Servant',
-            alignment: servant[2] ? servant[2] : '???',
-            timeline: servant[3]  ? servant[3] : '???',
-            str: servant[4] >= 0 ? `+${servant[4]}` : `${servant[4]}`,
-            end: servant[5] >= 0 ? `+${servant[5]}` : `${servant[5]}`,
-            agi: servant[6] >= 0 ? `+${servant[6]}` : `${servant[6]}` ,
-            mag: servant[7] >= 0 ? `+${servant[7]}` : `${servant[7]}`,
-            lck: servant[8] >= 0 ? `+${servant[8]}` : `${servant[8]}`,
-            np:  servant[9] >= 0 ? `+${servant[9]}` : `${servant[9]}`,
-            height: servant[10] ? servant[10] : '???',
-            weight: servant[11] ? servant[11] : '??',
-            attribute: servant[12]? servant[12] : '???',
-            image: servant[13] ? new URL(servant[13]) : null,
-        })
-
-        allHeights.push(
-            {
-                name: servant[0],
-                height: parseFloat(servant[10]) ? parseFloat(servant[10]) : 'N/A'
-            }
-        )
-
-        allWeights.push(
-            {
-                name: servant[0],
-                weight: parseFloat(servant[11]) ? parseFloat(servant[11]) : 'N/A'
-            }
-        )
-    })
-
-    allMasterProfiles.forEach(master => {
-        //Set Key value Pairs according to the Servant Container
-        if (!master[0] || master[0] == ''){return}
-
-        masterMap.set(master[0].toLowerCase(), 
-        {
-            name: master[0],
-            fullName: master[1] ? master[1] : '???',
-            alignment: master[2] ? master[2] : '???',
-            servantClass:  master[3] ? master[3] : '???',
-            timeline: master[4] ? master[4] : '???',
-            role: 'Master',
-
-            str: master[5] >= 0 ? `+${master[5]}` : `${master[5]}`,
-            end: master[6] >= 0 ? `+${master[6]}` : `${master[6]}`,
-            agi: master[7] >= 0 ? `+${master[7]}` : `${master[7]}`,
-            mag: master[8] >= 0 ? `+${master[8]}` : `${master[8]}`,
-            lck: master[9] >= 0 ? `+${master[9]}` : `${master[9]}`,
-            int: master[10] >= 0 ? `+${master[10]}` : `${master[10]}`,
-            char: master[11] >= 0 ? `+${master[11]}` : `${master[11]}`,
-
-            height: master[12] ? master[12] : '???',
-            weight: master[13] ? master[13] : '???',
-            age: master[14]? master[14] : '???',
-            image: master[15] ?  new URL(master[15]) : null,
-        })
-
-        allMasterNames.push(master[0].toLowerCase())
-
-        allHeights.push(
-            {
-                name: master[0],
-                height: parseFloat(master[12]) ? parseFloat(master[12]) : '???',
-            }
-        )
-
-        allWeights.push(
-            {
-                name: master[0],
-                weight: parseFloat(master[13]) ? parseFloat(master[13]) : '???',
-            }
-        )
-
-        allAges.push(
-            {
-                name: master[0],
-                age: parseInt(master[14]) ? parseInt(master[14]) :'???',
-            }
-        )
-
-    })
-
-    allNPC.forEach(npc => {
-        //Set Key value Pairs according to the Servant Container
-        if (!npc[0] || npc[0] == ''){return}
-        allNPCs.push(npc[0].toLowerCase())
-
-        npcMap.set(npc[0].toLowerCase(), 
-        {
-            name: npc[0],
-            fullName: npc[1] ? npc[1] : '???',
-            alignment: npc[2] ? npc[2] : '???',
-            timeline:  npc[3] ? npc[3] : '???',
-            role: 'NPC',
-
-            str: npc[4] >= 0 ? `+${npc[4]}` : `${npc[4]}`,
-            end: npc[5] >= 0 ? `+${npc[5]}` : `${npc[5]}`,
-            agi: npc[6] >= 0 ? `+${npc[6]}` : `${npc[6]}`,
-            mag: npc[7] >= 0 ? `+${npc[7]}` : `${npc[7]}`,
-            lck: npc[8] >= 0 ? `+${npc[8]}` : `${npc[8]}`,
-            int: npc[9] >= 0 ? `+${npc[9]}` : `${npc[9]}`,
-            char: npc[10] >= 0 ? `+${npc[10]}` : `${npc[10]}`,
-
-            height: npc[11] ? npc[11] : '???',
-            weight: npc[12] ? npc[12] : '???',
-            age: npc[13]? npc[13] : '???',
-            image: npc[14] ?  new URL(npc[14]) : null,
-        })
-
-        allHeights.push(
-            {
-                name: npc[0],
-                height: parseFloat(npc[11]) ? parseFloat(npc[11]) : '???'
-            }
-        )
-
-        allWeights.push(
-            {
-                name: npc[0],
-                weight: parseFloat(npc[12]) ? parseFloat(npc[12]) : '???'
-            }
-        )
-
-        allAges.push(
-            {
-                name: npc[0],
-                age: parseInt(npc[13]) ? parseInt(npc[13]) : '???'
-            }
-        )
-
-    })
-
-    allPlayers.forEach(player => {
-        if (!player[0] || player[0] == ''){return}
-
-        allPlayersList.push( 
-        {
-            name: player[0],
-            master: player[1] ? player[1] : 'N/A',
-            servant: player[2] ? player[2] : 'N/A',
-            timezone:  player[3] ? player[3] : 'N/A',
-            lastRound: player[4] ? player[4] : 'N/A',
-        })
-
-    })
+    //Load Data from Sheet
+    validCommands["load"]()
 
     //COMMAND HANDLERS
     const processCommand = (receivedMessage) =>{
@@ -216,39 +51,21 @@ const main = async () =>{
 
         //Regular Commands Branch
         if (validCommands[primaryCommand]){
-            if (primaryCommand == 'help'){
-                validCommands[primaryCommand](receivedMessage, arguments = {
-                        servantList: allServantContainers,
-                        masterList: allMasterNames,
-                        npcList: allNPCs,
-                        commandList: allCommands,
-                    })
+            //Do nothing for now since AllPlayersList still needs to be fixed
+             if (primaryCommand == 'timezones'){
+                return
+                //validCommands['timezones'](receivedMessage, allPlayersList)
             }
 
-            else if (primaryCommand == 'height'){
-                validCommands['height'](receivedMessage, allHeights)
-            }
-            else if (primaryCommand == 'weight'){
-                validCommands['weight'](receivedMessage, allWeights)
-            }
-            else if (primaryCommand == 'age'){
-                validCommands['age'](receivedMessage, allAges)
-            }
-
-            else if (primaryCommand == 'timezones'){
-                validCommands['timezones'](receivedMessage, allPlayersList)
-            }
-
-            //These are the rolls
-            else validCommands[primaryCommand](receivedMessage, arguments={
+        else validCommands[primaryCommand](receivedMessage, arguments={
                 sentArgs: arguments,
                 options: null
             })
         }
         //Servant Branch -- Check if the Servant is in the dict first
-        else if (servantMap.get(primaryCommand)){
+        else if (SERVANT_MAP.get(primaryCommand)){
             const validStats = ['str', 'end', 'agi', 'mag', 'lck', 'np']
-            const character = servantMap.get(primaryCommand)
+            const character = SERVANT_MAP.get(primaryCommand)
 
             //Show Profile State
             if (arguments.length == 0 || arguments[0] == 'profile' || arguments[0] == 'showprofile'){
@@ -266,8 +83,8 @@ const main = async () =>{
         }
 
         //Master Branch
-        else if (masterMap.get(primaryCommand)){
-            const character = masterMap.get(primaryCommand)
+        else if (MASTER_MAP.get(primaryCommand)){
+            const character = MASTER_MAP.get(primaryCommand)
             const validStats = ['str', 'end', 'agi', 'mag', 'lck', 'char', 'int']
 
 
@@ -287,8 +104,8 @@ const main = async () =>{
         }
 
         //NPC Branch
-        else if (npcMap.get(primaryCommand)){
-            const character = npcMap.get(primaryCommand)
+        else if (NPC_MAP.get(primaryCommand)){
+            const character = NPC_MAP.get(primaryCommand)
             const validStats = ['str', 'end', 'agi', 'mag', 'lck', 'char', 'int']
 
             //Show Profile State

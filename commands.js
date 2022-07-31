@@ -1,6 +1,9 @@
 require("discord.js");
+const database = require('./database.js');
 
-const roll = (receivedMessage,arguments) => {
+
+//FUNCTIONS
+module.exports.roll = (receivedMessage,arguments) => {
     console.log(`Rolling: ${arguments.sentArgs} \n`)
     let roll = " " + arguments.sentArgs
         roll = roll.substring(1)
@@ -101,7 +104,7 @@ const roll = (receivedMessage,arguments) => {
     receivedMessage.channel.send({embeds:[normalrollembed]})
 }
 
-const multiroll = (receivedMessage, arguments) => {
+module.exports.multiroll = (receivedMessage, arguments) => {
     let rolls = " " + arguments.sentArgs
         rolls = rolls.substring(1)
     console.log(rolls)
@@ -116,7 +119,7 @@ const multiroll = (receivedMessage, arguments) => {
     }
 }
 
-const help = (receivedMessage, arguments) => {
+module.exports.help = (receivedMessage) => {
     const helpembed = {
         color: 0x0099ff,
         title : ' **Command Examples**',
@@ -174,6 +177,11 @@ const help = (receivedMessage, arguments) => {
                 inline: true,}*/,]
     }
 
+    const masterList = Array.from(MASTER_MAP.keys())
+    const servantList = Array.from(SERVANT_MAP.keys())
+    const npcList = Array.from(NPC_MAP.keys())
+
+
     const commandsEmbed = {
         color: 0x32CD32,
         title : ' **Valid Commands **',
@@ -181,11 +189,11 @@ const help = (receivedMessage, arguments) => {
         fields: [
 
             {name: '**\nValid Commands for Masters:**',
-                value: arguments.masterList.join(", "),
+                value: masterList.join(", ") || '[None]',
                 inline: true,},
 
             {name: '**\nValid Command for Servants:**',
-                value: arguments.servantList.join(", "),
+                value: servantList.join(", ") || '[None]',
                 inline: true,},
 
             {name: '\u200b',
@@ -193,7 +201,7 @@ const help = (receivedMessage, arguments) => {
                 inline: false,},
 
             {name: '**\nValid Commands for NPCs:**',
-                value: arguments.npcList.join(", "),
+                value: npcList.join(", ") || '[None]',
                 inline: true,},
 
             {name: '\u200b',
@@ -201,7 +209,7 @@ const help = (receivedMessage, arguments) => {
                 inline: false,},
 
             {name: '**\nGeneral Commands: \n**',
-                value: arguments.commandList.join(", "),
+                value: COMMANDS.join(", ") || '[None]',
                 inline: true,},]
     }
 
@@ -209,18 +217,36 @@ const help = (receivedMessage, arguments) => {
     receivedMessage.channel.send({embeds:[commandsEmbed]})
 }
 
-const height = (receivedMessage, heightList) => {
+module.exports.timezones = (receivedMessage, playerList) => {
+    printList = []
+    const sortedPlayerList = playerList
+        .filter(player => parseInt(player.timezone))
+        .sort((a,b) => a.timezone - b.timezone)
+
+    for (let i =0; i< sortedPlayerList.length; i++){
+        const player = sortedPlayerList[i]
+        printList.push(`GMT ${player.timezone > 0? `+${player.timezone}`: player.timezone}  **${player.name}**\n`)
+    }
+    const helpembed = {
+        color: 3066993 ,
+        title : 'Timezones',
+        description: printList.join(""),
+    }
+
+    receivedMessage.channel.send({embeds:[helpembed]})
+    
+}
+
+module.exports.height = (receivedMessage) => {
     const shorterFiveFeet = []
     const fiveToFiveSix = []
     const fiveSixToFiveTen = []
     const fiveTenToSix = []
     const sixAndUp = []
 
-    const sortedHeightList = heightList
+    const sortedHeightList = HEIGHT_LIST
         .filter(character => parseFloat(character.height))
         .sort((a,b)=>{return a.height - b.height})
-
-    console.log(sortedHeightList)
 
     for (let i =0; i < sortedHeightList.length; i++){
         const character = sortedHeightList[i]
@@ -253,12 +279,12 @@ const height = (receivedMessage, heightList) => {
         `,
     }
 
-    receivedMessage.channel.send({embeds:[heightEmbed]}) 
+     receivedMessage.channel.send({embeds:[heightEmbed]})
 }
 
-const weight = (receivedMessage, weightList) => {
+module.exports.weight = (receivedMessage) => {
     printList = []
-    const sortedList = weightList
+    const sortedList = WEIGHT_LIST
         .filter(character => parseFloat(character.weight))
         .sort((a,b) =>  a.weight - b.weight)
     
@@ -274,15 +300,16 @@ const weight = (receivedMessage, weightList) => {
     }
 
     receivedMessage.channel.send({embeds:[weightEmbed]})
+
 }
 
-const age = (receivedMessage, ageList) => {
+module.exports.age = (receivedMessage) => {
     const underTeen = []
     const teen = []
     const twenty = []
     const elderly = []
 
-    const sortedAgeList = ageList
+    const sortedAgeList = AGE_LIST
         .filter(character => parseInt(character.age))
         .sort((a,b)=>{return a.age - b.age})
 
@@ -312,45 +339,37 @@ const age = (receivedMessage, ageList) => {
         `,
     }
 
-    receivedMessage.channel.send({embeds:[ageEmbed]}) 
+    receivedMessage.channel.send({embeds:[ageEmbed]})
+ 
 }
 
-const timezones = (receivedMessage, playerList) => {
-    printList = []
-    const sortedPlayerList = playerList
-        .filter(player => parseInt(player.timezone))
-        .sort((a,b) => a.timezone - b.timezone)
-
-    for (let i =0; i< sortedPlayerList.length; i++){
-        const player = sortedPlayerList[i]
-        printList.push(`GMT ${player.timezone > 0? `+${player.timezone}`: player.timezone}  **${player.name}**\n`)
-    }
-    const helpembed = {
-        color: 3066993 ,
-        title : 'Timezones',
-        description: printList.join(""),
-    }
-
-    receivedMessage.channel.send({embeds:[helpembed]})
-    
-}
-
-const culture = (receivedMessage, arguments) => {receivedMessage.channel.send('https://cdn.discordapp.com/emojis/663332858353549324.gif?v=1')}
-const sparkle = (receivedMessage, arguments)=>{receivedMessage.channel.send('https://cdn.discordapp.com/emojis/646267054491435009.gif?v=1')}
-const sing = (receivedMessage, arguments)=>{receivedMessage.channel.send('Never gonna give you up, Never gonna let you down, never gonna turn around and hurt you~') }
 
 
-module.exports = {
-    roll: function(receivedMessage,arguments){return roll(receivedMessage,arguments)},
-    multiroll: function(receivedMessage,arguments){return multiroll(receivedMessage,arguments)},
-    help: function(receivedMessage, arguments){return help(receivedMessage,arguments)},
+module.exports.culture = (receivedMessage, arguments) => {receivedMessage.channel.send('https://cdn.discordapp.com/emojis/663332858353549324.gif?v=1')}
+module.exports.sparkle = (receivedMessage, arguments)=>{receivedMessage.channel.send('https://cdn.discordapp.com/emojis/646267054491435009.gif?v=1')}
+module.exports.sing = (receivedMessage, arguments)=>{receivedMessage.channel.send('Never gonna give you up, Never gonna let you down, never gonna turn around and hurt you~') }
 
-    height: function(receivedMessage, heightList){return height(receivedMessage, heightList)},
-    weight: function(receivedMessage, weightList){return weight(receivedMessage, weightList)},
-    age: function(receivedMessage, ageList){return age(receivedMessage, ageList)},
-    timezones: function(receivedMessage, playerList){return timezones(receivedMessage, playerList)},
+module.exports.load = async () =>{
+    SERVANT_MAP = await database.servants
+    MASTER_MAP = await database.masters
+    NPC_MAP = await database.npcs
+    PLAYER_MAP = await database.players
 
-    culture: function(receivedMessage,arguments){return culture(receivedMessage,arguments)},
-    sparkle: function(receivedMessage,arguments){return sparkle(receivedMessage,arguments)},
-    sing: function(receivedMessage,arguments){return sing(receivedMessage,arguments)},
+    SERVANT_MAP.forEach((servant) => {
+        HEIGHT_LIST.push({name: servant.name, height: servant.height})
+        WEIGHT_LIST.push({name: servant.name, weight: servant.weight})
+        AGE_LIST.push({name: servant.name, age: servant.age})
+    })
+
+    MASTER_MAP.forEach((servant) => {
+        HEIGHT_LIST.push({name: servant.name, height: servant.height})
+        WEIGHT_LIST.push({name: servant.name, weight: servant.weight})
+        AGE_LIST.push({name: servant.name, age: servant.age})
+    })
+
+    NPC_MAP.forEach((servant) => {
+        HEIGHT_LIST.push({name: servant.name, height: servant.height})
+        WEIGHT_LIST.push({name: servant.name, weight: servant.weight})
+        AGE_LIST.push({name: servant.name, age: servant.age})
+    })
 }

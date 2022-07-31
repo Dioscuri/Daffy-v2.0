@@ -3,7 +3,7 @@ require("discord.js");
 
 
  //Fetches Data from a Sheet in a Spreadsheet
- const  fetchSheetData = async (auth, sheetID, seekRange) =>{
+module.exports.fetchSheetData = async (auth, sheetID, seekRange) =>{
     const sheets = google.sheets({ version: 'v4', auth });
     const parameters = {spreadsheetId: sheetID, range:seekRange}
 
@@ -15,7 +15,8 @@ require("discord.js");
     return result
  }
 
- const profile = (receivedMessage, arguments) =>{
+ 
+ module.exports.profile = (receivedMessage, arguments) =>{
     const character = arguments
     if (character.role == "Servant"){                 
         const profileembed = {
@@ -82,7 +83,4 @@ require("discord.js");
 }
 
 
- module.exports = {
-    profile: (receivedMessage,arguments) => profile(receivedMessage,arguments),
-    fetchSheetData: (auth, sheetID, seekRange) => fetchSheetData(auth, sheetID, seekRange),
- };
+
