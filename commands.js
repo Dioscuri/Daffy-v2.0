@@ -315,10 +315,9 @@ const age = (receivedMessage) => {
         }
     }
 
-    const servantAges = data.servants.map(genAgeObj)
     const masterAges = data.masters.map(genAgeObj)
     const npcAges = data.npcs.map(genAgeObj)
-    const ageList = [...servantAges, ...masterAges, ...npcAges]
+    const ageList = [...masterAges, ...npcAges]
 
     const sortedAgeList = ageList
         .filter(character => parseInt(character.age))
