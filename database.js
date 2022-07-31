@@ -20,7 +20,7 @@ const constructServantProfile = (servant) => {
     timeline: servant[3]  ? servant[3] : '???',
     str: servant[4] >= 0 ? `+${servant[4]}` : `${servant[4]}`,
     end: servant[5] >= 0 ? `+${servant[5]}` : `${servant[5]}`,
-    agi: servant[6] >= 0 ? `+${servant[6]}` : `${servant[6]}` ,
+    agi: servant[6] >= 0 ? `+${servant[6]}` : `${servant[6]}`,
     mag: servant[7] >= 0 ? `+${servant[7]}` : `${servant[7]}`,
     lck: servant[8] >= 0 ? `+${servant[8]}` : `${servant[8]}`,
     np:  servant[9] >= 0 ? `+${servant[9]}` : `${servant[9]}`,
