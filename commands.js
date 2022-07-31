@@ -223,9 +223,9 @@ const height = (receivedMessage) => {
         }
     }
 
-    const servantHeights = data.servants.map(genHeightObj)
-    const masterHeights = data.masters.map(genHeightObj)
-    const npcHeights = data.npcs.map(genHeightObj)
+    const servantHeights = [...data.servants.values()].map(genHeightObj)
+    const masterHeights = [...data.masters.values()].map(genHeightObj)
+    const npcHeights = [...data.npcs.values()].map(genHeightObj)
     const heightList = [...servantHeights, ...masterHeights, ...npcHeights]
 
     const sortedHeightList = heightList
@@ -278,9 +278,9 @@ const weight = (receivedMessage) => {
         }
     }
 
-    const servantWeights = data.servants.map(genWeightObj)
-    const masterWeights = data.masters.map(genWeightObj)
-    const npcWeights = data.npcs.map(genWeightObj)
+    const servantWeights = [...data.servants.values()].map(genWeightObj)
+    const masterWeights = [...data.masters.values()].map(genWeightObj)
+    const npcWeights = [...data.npcs.values()].map(genWeightObj)
     const weightList = [...servantWeights, ...masterWeights, ...npcWeights]
 
 
@@ -315,8 +315,8 @@ const age = (receivedMessage) => {
         }
     }
 
-    const masterAges = data.masters.map(genAgeObj)
-    const npcAges = data.npcs.map(genAgeObj)
+    const masterAges = [...data.masters.values()].map(genAgeObj)
+    const npcAges = [...data.npcs.values()].map(genAgeObj)
     const ageList = [...masterAges, ...npcAges]
 
     const sortedAgeList = ageList
