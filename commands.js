@@ -1,6 +1,30 @@
 require("discord.js");
-const database = require('./database.js');
+const data = require('./database.js');
 
+//HELPER FUNCTIONS
+const compileList = async (list, attribute) => {
+    const servants = await data.servants
+    const masters = await data.masters
+    const npcs = await data.npcs
+
+    servants.forEach(
+        (character) => {
+            list.push({name: character.name, [attribute]: character[attribute]})
+        }
+    )
+
+    masters.forEach(
+        (character) => {
+            list.push({name: character.name, [attribute]: character[attribute]})
+        }
+    )
+
+    npcs.forEach(
+        (character) => {
+            list.push({name: character.name, [attribute]: character[attribute]})
+        }
+    )
+}
 
 //FUNCTIONS
 module.exports.roll = (receivedMessage,arguments) => {
@@ -119,7 +143,7 @@ module.exports.multiroll = (receivedMessage, arguments) => {
     }
 }
 
-module.exports.help = (receivedMessage) => {
+module.exports.help = async (receivedMessage) => {
     const helpembed = {
         color: 0x0099ff,
         title : ' **Command Examples**',
@@ -177,9 +201,13 @@ module.exports.help = (receivedMessage) => {
                 inline: true,}*/,]
     }
 
-    const masterList = Array.from(MASTER_MAP.keys())
-    const servantList = Array.from(SERVANT_MAP.keys())
-    const npcList = Array.from(NPC_MAP.keys())
+    const master_map = await data.masters
+    const servant_map = await data.servants
+    const npc_map = await data.npcs
+
+    const masterList = Array.from(master_map.keys())
+    const servantList = Array.from(servant_map.keys())
+    const npcList = Array.from(npc_map.keys())
 
 
     const commandsEmbed = {
@@ -217,8 +245,16 @@ module.exports.help = (receivedMessage) => {
     receivedMessage.channel.send({embeds:[commandsEmbed]})
 }
 
-module.exports.timezones = (receivedMessage, playerList) => {
+module.exports.timezones = async (receivedMessage) => {
     printList = []
+
+    const player_map = await data.players
+    const playerList = []
+    player_map.forEach(
+       (player) => playerList.push({name:player.name, timezone:player.timezone})
+    )
+
+
     const sortedPlayerList = playerList
         .filter(player => parseInt(player.timezone))
         .sort((a,b) => a.timezone - b.timezone)
@@ -237,14 +273,17 @@ module.exports.timezones = (receivedMessage, playerList) => {
     
 }
 
-module.exports.height = (receivedMessage) => {
+module.exports.height = async (receivedMessage) => {
     const shorterFiveFeet = []
     const fiveToFiveSix = []
     const fiveSixToFiveTen = []
     const fiveTenToSix = []
     const sixAndUp = []
 
-    const sortedHeightList = HEIGHT_LIST
+    const height_list = []
+    await compileList(height_list, "height")
+
+    const sortedHeightList = height_list
         .filter(character => parseFloat(character.height))
         .sort((a,b)=>{return a.height - b.height})
 
@@ -269,7 +308,7 @@ module.exports.height = (receivedMessage) => {
 
     const heightEmbed = {
         color: 0x0099ff,
-        title : 'Height Rankings',
+        title : 'Character Height List',
         description: `
         \n *—Below 5 feet—*\n${shorterFiveFeet.join("")}
         \n*—5 feet and up (152.4 cm)—*\n${fiveToFiveSix.join("")}
@@ -282,9 +321,13 @@ module.exports.height = (receivedMessage) => {
      receivedMessage.channel.send({embeds:[heightEmbed]})
 }
 
-module.exports.weight = (receivedMessage) => {
+module.exports.weight = async (receivedMessage) => {
     printList = []
-    const sortedList = WEIGHT_LIST
+    
+    const list = []
+    await compileList(list, "weight")
+
+    const sortedList = list
         .filter(character => parseFloat(character.weight))
         .sort((a,b) =>  a.weight - b.weight)
     
@@ -295,7 +338,7 @@ module.exports.weight = (receivedMessage) => {
 
     const weightEmbed = {
         color: 0x0099ff,
-        title : `Characters' Weight List`,
+        title : `Character Weight List`,
         description: printList.join(""),
     }
 
@@ -303,13 +346,16 @@ module.exports.weight = (receivedMessage) => {
 
 }
 
-module.exports.age = (receivedMessage) => {
+module.exports.age = async (receivedMessage) => {
     const underTeen = []
     const teen = []
     const twenty = []
     const elderly = []
 
-    const sortedAgeList = AGE_LIST
+    const list =[]
+    await compileList(list, "age")
+
+    const sortedAgeList = list
         .filter(character => parseInt(character.age))
         .sort((a,b)=>{return a.age - b.age})
 
@@ -330,7 +376,7 @@ module.exports.age = (receivedMessage) => {
 
     const ageEmbed = {
         color: 0x0099ff,
-        title : "Characters 'Age List",
+        title : "Character Age List",
         description: `
         \n *—The Kiddos—*\n${underTeen.join("")}
         \n*—The Teenagers—*\n${teen.join("")}
@@ -345,31 +391,11 @@ module.exports.age = (receivedMessage) => {
 
 
 
-module.exports.culture = (receivedMessage, arguments) => {receivedMessage.channel.send('https://cdn.discordapp.com/emojis/663332858353549324.gif?v=1')}
-module.exports.sparkle = (receivedMessage, arguments)=>{receivedMessage.channel.send('https://cdn.discordapp.com/emojis/646267054491435009.gif?v=1')}
-module.exports.sing = (receivedMessage, arguments)=>{receivedMessage.channel.send('Never gonna give you up, Never gonna let you down, never gonna turn around and hurt you~') }
+module.exports.culture = (receivedMessage) => {receivedMessage.channel.send('https://cdn.discordapp.com/emojis/663332858353549324.gif?v=1')}
+module.exports.sparkle = (receivedMessage)=>{receivedMessage.channel.send('https://cdn.discordapp.com/emojis/646267054491435009.gif?v=1')}
+module.exports.sing = (receivedMessage)=>{receivedMessage.channel.send('Never gonna give you up, Never gonna let you down, never gonna turn around and hurt you~') }
 
-module.exports.load = async () =>{
-    SERVANT_MAP = await database.servants
-    MASTER_MAP = await database.masters
-    NPC_MAP = await database.npcs
-    PLAYER_MAP = await database.players
-
-    SERVANT_MAP.forEach((servant) => {
-        HEIGHT_LIST.push({name: servant.name, height: servant.height})
-        WEIGHT_LIST.push({name: servant.name, weight: servant.weight})
-        AGE_LIST.push({name: servant.name, age: servant.age})
-    })
-
-    MASTER_MAP.forEach((servant) => {
-        HEIGHT_LIST.push({name: servant.name, height: servant.height})
-        WEIGHT_LIST.push({name: servant.name, weight: servant.weight})
-        AGE_LIST.push({name: servant.name, age: servant.age})
-    })
-
-    NPC_MAP.forEach((servant) => {
-        HEIGHT_LIST.push({name: servant.name, height: servant.height})
-        WEIGHT_LIST.push({name: servant.name, weight: servant.weight})
-        AGE_LIST.push({name: servant.name, age: servant.age})
-    })
+module.exports.load = async (receivedMessage) =>{
+    data.reload()
+    receivedMessage.channel.send("Data Reloaded")
 }
