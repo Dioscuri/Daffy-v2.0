@@ -1,6 +1,6 @@
-require("discord.js");
+const data = require('./database') 
 
-const roll = (receivedMessage,arguments) => {
+const roll = (receivedMessage, arguments) => {
     console.log(`Rolling: ${arguments.sentArgs} \n`)
     let roll = " " + arguments.sentArgs
         roll = roll.substring(1)
@@ -209,12 +209,24 @@ const help = (receivedMessage, arguments) => {
     receivedMessage.channel.send({embeds:[commandsEmbed]})
 }
 
-const height = (receivedMessage, heightList) => {
+const height = (receivedMessage) => {
     const shorterFiveFeet = []
     const fiveToFiveSix = []
     const fiveSixToFiveTen = []
     const fiveTenToSix = []
     const sixAndUp = []
+
+    const genHeightObj = (o) => {
+        return {
+            name: o.name,
+            height: parseFloat(o.height),
+        }
+    }
+
+    const servantHeights = data.servants.map(genHeightObj)
+    const masterHeights = data.masters.map(genHeightObj)
+    const npcHeights = data.npcs.map(genHeightObj)
+    const heightList = [...servantHeights, ...masterHeights, ...npcHeights]
 
     const sortedHeightList = heightList
         .filter(character => parseFloat(character.height))
@@ -256,8 +268,22 @@ const height = (receivedMessage, heightList) => {
     receivedMessage.channel.send({embeds:[heightEmbed]}) 
 }
 
-const weight = (receivedMessage, weightList) => {
+const weight = (receivedMessage) => {
     printList = []
+    
+    const genWeightObj = (o) => {
+        return {
+            name: o.name,
+            weight: parseFloat(o.weight),
+        }
+    }
+
+    const servantWeights = data.servants.map(genWeightObj)
+    const masterWeights = data.masters.map(genWeightObj)
+    const npcWeights = data.npcs.map(genWeightObj)
+    const weightList = [...servantWeights, ...masterWeights, ...npcWeights]
+
+
     const sortedList = weightList
         .filter(character => parseFloat(character.weight))
         .sort((a,b) =>  a.weight - b.weight)
@@ -276,11 +302,23 @@ const weight = (receivedMessage, weightList) => {
     receivedMessage.channel.send({embeds:[weightEmbed]})
 }
 
-const age = (receivedMessage, ageList) => {
+const age = (receivedMessage) => {
     const underTeen = []
     const teen = []
     const twenty = []
     const elderly = []
+
+    const genAgeObj = (o) => {
+        return {
+            name: o.name,
+            age: parseFloat(o.age),
+        }
+    }
+
+    const servantAges = data.servants.map(genAgeObj)
+    const masterAges = data.masters.map(genAgeObj)
+    const npcAges = data.npcs.map(genAgeObj)
+    const ageList = [...servantAges, ...masterAges, ...npcAges]
 
     const sortedAgeList = ageList
         .filter(character => parseInt(character.age))
@@ -315,9 +353,9 @@ const age = (receivedMessage, ageList) => {
     receivedMessage.channel.send({embeds:[ageEmbed]}) 
 }
 
-const timezones = (receivedMessage, playerList) => {
+const timezones = (receivedMessage) => {
     printList = []
-    const sortedPlayerList = playerList
+    const sortedPlayerList = data.players
         .filter(player => parseInt(player.timezone))
         .sort((a,b) => a.timezone - b.timezone)
 
@@ -345,10 +383,10 @@ module.exports = {
     multiroll: function(receivedMessage,arguments){return multiroll(receivedMessage,arguments)},
     help: function(receivedMessage, arguments){return help(receivedMessage,arguments)},
 
-    height: function(receivedMessage, heightList){return height(receivedMessage, heightList)},
-    weight: function(receivedMessage, weightList){return weight(receivedMessage, weightList)},
-    age: function(receivedMessage, ageList){return age(receivedMessage, ageList)},
-    timezones: function(receivedMessage, playerList){return timezones(receivedMessage, playerList)},
+    height: function(receivedMessage){return height(receivedMessage)},
+    weight: function(receivedMessage){return weight(receivedMessage)},
+    age: function(receivedMessage){return age(receivedMessage)},
+    timezones: function(receivedMessage){return timezones(receivedMessage)},
 
     culture: function(receivedMessage,arguments){return culture(receivedMessage,arguments)},
     sparkle: function(receivedMessage,arguments){return sparkle(receivedMessage,arguments)},
