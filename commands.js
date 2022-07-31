@@ -1,5 +1,10 @@
 const data = require('./database') 
 
+const servantList = [...data.servants.values()]
+const masterList = [...data.masters.values()]
+const npcList = [...data.npcs.values()]
+const playerList = [...data.players.values()] 
+
 const roll = (receivedMessage, arguments) => {
     console.log(`Rolling: ${arguments.sentArgs} \n`)
     let roll = " " + arguments.sentArgs
@@ -181,11 +186,11 @@ const help = (receivedMessage, arguments) => {
         fields: [
 
             {name: '**\nValid Commands for Masters:**',
-                value: arguments.masterList.join(", "),
+                value: [...masterList.map((o) => o.name)].join(", "),
                 inline: true,},
 
             {name: '**\nValid Command for Servants:**',
-                value: arguments.servantList.join(", "),
+                value: [...servantList.map((o) => o.name)].join(", "),
                 inline: true,},
 
             {name: '\u200b',
@@ -193,7 +198,7 @@ const help = (receivedMessage, arguments) => {
                 inline: false,},
 
             {name: '**\nValid Commands for NPCs:**',
-                value: arguments.npcList.join(", "),
+                value: [...npcList.map((o) => o.name)].join(", "),
                 inline: true,},
 
             {name: '\u200b',
@@ -223,9 +228,9 @@ const height = (receivedMessage) => {
         }
     }
 
-    const servantHeights = [...data.servants.values()].map(genHeightObj)
-    const masterHeights = [...data.masters.values()].map(genHeightObj)
-    const npcHeights = [...data.npcs.values()].map(genHeightObj)
+    const servantHeights = servantList.map(genHeightObj)
+    const masterHeights = masterList.map(genHeightObj)
+    const npcHeights = npcList.map(genHeightObj)
     const heightList = [...servantHeights, ...masterHeights, ...npcHeights]
 
     const sortedHeightList = heightList
@@ -278,9 +283,9 @@ const weight = (receivedMessage) => {
         }
     }
 
-    const servantWeights = [...data.servants.values()].map(genWeightObj)
-    const masterWeights = [...data.masters.values()].map(genWeightObj)
-    const npcWeights = [...data.npcs.values()].map(genWeightObj)
+    const servantWeights = servantList.map(genWeightObj)
+    const masterWeights = masterList.map(genWeightObj)
+    const npcWeights = npcList.map(genWeightObj)
     const weightList = [...servantWeights, ...masterWeights, ...npcWeights]
 
 
@@ -315,8 +320,8 @@ const age = (receivedMessage) => {
         }
     }
 
-    const masterAges = [...data.masters.values()].map(genAgeObj)
-    const npcAges = [...data.npcs.values()].map(genAgeObj)
+    const masterAges = masterList.map(genAgeObj)
+    const npcAges = npcList.map(genAgeObj)
     const ageList = [...masterAges, ...npcAges]
 
     const sortedAgeList = ageList
@@ -354,7 +359,7 @@ const age = (receivedMessage) => {
 
 const timezones = (receivedMessage) => {
     printList = []
-    const sortedPlayerList = data.players
+    const sortedPlayerList = playerList
         .filter(player => parseInt(player.timezone))
         .sort((a,b) => a.timezone - b.timezone)
 
