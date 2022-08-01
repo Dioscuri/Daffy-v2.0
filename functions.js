@@ -16,6 +16,28 @@ module.exports.fetchSheetData = async (auth, sheetID, seekRange) =>{
     return result
  }
 
+ module.exports.loadHP = (character) => {
+    //Load Values
+    const maxHP = parseInt(character.max_hp)
+    const currHP = parseInt(character.curr_hp)
+
+    const numGreen = Math.floor(currHP/maxHP * 10)
+
+    const greenSquareID = '<:green_square:1003505885777252355>'
+    const blackSquareID = '<:black_large_square:1003512814163468389>'
+
+    const hpBar = []
+
+    //HP Bar made of 10 squares
+    for (let i = 0; i < 10; i++){
+        if (i < numGreen){hpBar.push(greenSquareID)}
+        else hpBar.push(blackSquareID)
+    }
+
+    return hpBar
+ }
+
+
  module.exports.profile = (receivedMessage, arguments) =>{
     const character = arguments
     if (character.role == "Servant"){                 
@@ -26,6 +48,12 @@ module.exports.fetchSheetData = async (auth, sheetID, seekRange) =>{
 
             thumbnail: {url: character.image,},
             fields: [
+                {name: '\u200b',
+                value: '\u200b',
+                inline: false,},
+
+                { name: `MAX HITPOINTS -- ${character.max_hp || '???'} hp`, value: `-----`, inline: true,},
+
                 {name: '\u200b',
                 value: '\u200b',
                 inline: false,},
@@ -54,6 +82,12 @@ module.exports.fetchSheetData = async (auth, sheetID, seekRange) =>{
 
             thumbnail: {url: character.image,},
             fields: [
+                {name: '\u200b',
+                value: '\u200b',
+                inline: false,},
+
+                { name: `MAX HITPOINTS -- ${character.max_hp || '???'} hp`, value: `-----`, inline: true,},
+
                 {name: '\u200b',
                 value: '\u200b',
                 inline: false,},

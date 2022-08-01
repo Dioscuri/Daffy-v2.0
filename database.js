@@ -1,10 +1,9 @@
 const { fetchSheetData, newFetchSheetData } = require('./functions')
-GLOBAL_TEST = []
 
 // Functions for fetching data from Google Sheets
-const fetchNpcData =  async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'NPCs!A3:O')
-const fetchServantData =  async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Servants!A3:N')
-const fetchMasterData =   async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Masters!A3:P')
+const fetchNpcData =  async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'NPCs!A3:Q')
+const fetchServantData =  async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Servants!A3:P')
+const fetchMasterData =   async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Masters!A3:R')
 const fetchPlayerData =   async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Players!A3:E')
 
 // Helper functions for constructing objects representing sheet data.
@@ -27,6 +26,9 @@ const constructServantProfile = (servant) => {
     weight: servant[11] || '???',
     attribute: servant[12] || '???',
     image: servant[13] ? new URL(servant[13]) : null,
+
+    max_hp: servant[14] || '???',
+    curr_hp: servant[15] || '???'
   }
 }
 
