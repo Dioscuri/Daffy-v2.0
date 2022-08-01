@@ -3,6 +3,7 @@ require("dotenv").config(); //to start process from .env file
 const {Client, Intents}=require("discord.js");
 const functions = require('./functions.js');
 const validCommands = require('./commands.js')
+const daffyCommands = require('./daffybotCommands.js')
 const data = require('./database.js')
 
 COMMANDS = Object.keys(validCommands)
@@ -109,8 +110,7 @@ const main = async () =>{
         console.log("Command received: " + receivedMessagefinal)
         console.log("Arguments: " + instruction)
 
-        if (instruction=="sing"){validCommands.sing(receivedMessage, arguments)}
-        else if (instruction=="nyoom"){receivedMessage.channel.send("<:daffynyoom:762780988123250738>")}
+        if (daffyCommands[instruction]){daffyCommands[instruction](receivedMessage)}
         else return
     }
 
