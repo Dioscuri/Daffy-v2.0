@@ -52,7 +52,8 @@ module.exports.fetchSheetData = async (auth, sheetID, seekRange) =>{
                 value: '\u200b',
                 inline: false,},
 
-                { name: `MAX HITPOINTS -- ${character.max_hp || '???'} hp`, value: `-----`, inline: true,},
+                { name: `STATUS: *${character.status || '???'}*`, value: `------------`, inline: false,},
+                { name: `MAX HITPOINTS -- ${character.max_hp || '???'} hp`, value: `----------`, inline: false,},
 
                 {name: '\u200b',
                 value: '\u200b',
@@ -86,7 +87,8 @@ module.exports.fetchSheetData = async (auth, sheetID, seekRange) =>{
                 value: '\u200b',
                 inline: false,},
 
-                { name: `MAX HITPOINTS -- ${character.max_hp || '???'} hp`, value: `-----`, inline: true,},
+                { name: `STATUS: *${character.status || '???'}*`, value: `------------`, inline: false,},
+                { name: `MAX HITPOINTS -- ${character.max_hp || '???'} hp`, value: `-----------`, inline: false,},
 
                 {name: '\u200b',
                 value: '\u200b',

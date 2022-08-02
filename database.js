@@ -1,7 +1,7 @@
 const { fetchSheetData, newFetchSheetData } = require('./functions')
 
 // Functions for fetching data from Google Sheets
-const fetchNpcData =  async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'NPCs!A3:Q')
+const fetchNpcData =  async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'NPCs!A3:R')
 const fetchServantData =  async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Servants!A3:P')
 const fetchMasterData =   async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Masters!A3:R')
 const fetchPlayerData =   async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Players!A3:E')
@@ -53,6 +53,9 @@ const constructMasterProfile = (master) => {
     weight: master[13] || '???',
     age: master[14] || '???',
     image: master[15] ?  new URL(master[15]) : null,
+
+    max_hp: master[16] || '???',
+    curr_hp: master[17] || '???'
   }
 }
 
@@ -76,7 +79,13 @@ const constructNpcProfile = (npc) => {
     weight: npc[12] || '???',
     age: npc[13] || '???',
     image: npc[14] ?  new URL(npc[14]) : null,
+
+    max_hp: npc[15] || '???',
+    curr_hp: npc[16] || '???',
+
+    status: npc[17] || '???'
   }
+
 }
 
 const constructPlayerProfile = (player) => {
