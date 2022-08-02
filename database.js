@@ -2,8 +2,8 @@ const { fetchSheetData, newFetchSheetData } = require('./functions')
 
 // Functions for fetching data from Google Sheets
 const fetchNpcData =  async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'NPCs!A3:R')
-const fetchServantData =  async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Servants!A3:P')
-const fetchMasterData =   async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Masters!A3:R')
+const fetchServantData =  async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Servants!A3:Q')
+const fetchMasterData =   async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Masters!A3:S')
 const fetchPlayerData =   async () => await fetchSheetData(process.env.GOOGLE_KEY, process.env.SHEET_ID, 'Players!A3:E')
 
 // Helper functions for constructing objects representing sheet data.
@@ -28,7 +28,10 @@ const constructServantProfile = (servant) => {
     image: servant[13] ? new URL(servant[13]) : null,
 
     max_hp: servant[14] || '???',
-    curr_hp: servant[15] || '???'
+    curr_hp: servant[15] || '???',
+
+    status: servant[16] || '???'
+
   }
 }
 
@@ -55,7 +58,10 @@ const constructMasterProfile = (master) => {
     image: master[15] ?  new URL(master[15]) : null,
 
     max_hp: master[16] || '???',
-    curr_hp: master[17] || '???'
+    curr_hp: master[17] || '???',
+
+    status: master[18] || '???'
+
   }
 }
 
